@@ -8,6 +8,6 @@ const port = 3000;
 app.listen(port, () => console.log(`listening on ${port}...`));
 
 // routing
-app.get("/", (req, res) => {
-  res.status(200).send("hello from the server");
+app.get("/api/v1/tours", (req, res) => {
+  res.
 });
