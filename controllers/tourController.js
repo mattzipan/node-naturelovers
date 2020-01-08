@@ -5,6 +5,19 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+//middleware to check if :id is valid
+exports.checkId = (req, res, next, val) => {
+  //send error if tour doesn't exist
+
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: "fail",
+      message: "Invalid ID"
+    });
+  }
+  next();
+};
+
 // API GET all tours
 exports.getAllTours = (req, res) => {
   res.status(200).json({
@@ -26,14 +39,6 @@ exports.getTour = (req, res) => {
 
   //get the tour
   const tour = tours.find(el => el.id === id);
-
-  //send error if tour doesn't exist
-  if (!tour) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Invalid ID"
-    });
-  }
 
   res.status(200).json({
     //following JSend formating standard
@@ -73,15 +78,6 @@ exports.createTour = (req, res) => {
 //API PATCH
 
 exports.updateTour = (req, res) => {
-  //send error if tour doesn't exist
-
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Invalid ID"
-    });
-  }
-
   res.status(200).json({
     status: "success",
     data: {
@@ -92,15 +88,6 @@ exports.updateTour = (req, res) => {
 
 //API DELETE
 exports.deleteTour = (req, res) => {
-  //send error if tour doesn't exist
-
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Invalid ID"
-    });
-  }
-
   //no content response for deleting
   res.status(204).json({
     status: "success",
