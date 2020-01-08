@@ -17,7 +17,7 @@ const port = 3000;
 app.listen(port, () => console.log(`listening on ${port}...`));
 
 // API GET all tours
-app.get("/api/v1/tours", (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     //following JSend formating standard
     status: "success",
@@ -26,10 +26,11 @@ app.get("/api/v1/tours", (req, res) => {
       tours
     }
   });
-});
+};
 
 // API get specific tour by ID
-app.get("/api/v1/tours/:id", (req, res) => {
+
+const getTour = (req, res) => {
   //convert req.params to numbers
   const id = req.params.id * 1;
 
@@ -52,10 +53,10 @@ app.get("/api/v1/tours/:id", (req, res) => {
       tour
     }
   });
-});
+};
 
 //API POST
-app.post("/api/v1/tours", (req, res) => {
+const createTour = (req, res) => {
   // console.log(req.body);
 
   //temporary while working with local JSON file: creating an id for each document
@@ -77,10 +78,11 @@ app.post("/api/v1/tours", (req, res) => {
       });
     }
   );
-});
+};
 
 //API PATCH
-app.patch("/api/v1/tours/:id", (req, res) => {
+
+const updateTour = (req, res) => {
   //send error if tour doesn't exist
 
   if (req.params.id * 1 > tours.length) {
@@ -96,4 +98,40 @@ app.patch("/api/v1/tours/:id", (req, res) => {
       tour: "updated tour"
     }
   });
-});
+};
+
+//API DELETE
+const deleteTour = (req, res) => {
+  //send error if tour doesn't exist
+
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: "fail",
+      message: "Invalid ID"
+    });
+  }
+
+  //no content response for deleting
+  res.status(204).json({
+    status: "success",
+    data: null
+  });
+};
+
+// Routes
+// app.get("/api/v1/tours", getAllTours);
+// app.post("/api/v1/tours", createTour);
+// app.get("/api/v1/tours/:id", getTour);
+// app.patch("/api/v1/tours/:id", updateTour);
+// app.delete("/api/v1/tours/:id", deleteTour);
+
+//shorter syntax for routes
+app
+  .route("/api/v1/tours")
+  .get(getAllTours)
+  .post(createTour);
+app
+  .route("/api/v1/tours/:id")
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
