@@ -18,6 +18,17 @@ exports.checkId = (req, res, next, val) => {
   next();
 };
 
+//middleware to check for name and price in request body
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: "fail",
+      message: "tour must include a name and a price"
+    });
+  }
+  next();
+};
+
 // API GET all tours
 exports.getAllTours = (req, res) => {
   res.status(200).json({
