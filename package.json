@@ -1,10 +1,10 @@
 {
-  "name": "Node Naturelovers",
+  "name": "node-naturelovers",
   "version": "1.0.0",
   "description": "Node project to practice node.js api and server development. It is following the MVC pattern and uses templates in the frontend.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "Matthias Kupperschmidt",
