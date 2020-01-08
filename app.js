@@ -1,11 +1,28 @@
 const express = require("express");
 const fs = require("fs");
+const morgan = require("morgan");
 
 //assign express to app
 const app = express();
 
-//add the req body to the POST
+// MIDDLEWARES
+//morgan logging middleware
+app.use(morgan("dev"));
+
+//middleware to add the req body to the POST
 app.use(express.json());
+
+//test middleware
+app.use((req, res, next) => {
+  // console.log("hello from the middleware 🤘");
+  next();
+});
+
+//another test middleware
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 //reading the file SYNCHRONOUSLY at top level to not block event loop
 const tours = JSON.parse(
@@ -22,6 +39,7 @@ const getAllTours = (req, res) => {
     //following JSend formating standard
     status: "success",
     results: tours.length,
+    requestedAt: req.requestTime,
     data: {
       tours
     }
@@ -118,6 +136,34 @@ const deleteTour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res
+    .status(500)
+    .json({ status: "error", message: "this route is not defined" });
+};
+
+const createUser = (req, res) => {
+  res
+    .status(500)
+    .json({ status: "error", message: "this route is not defined" });
+};
+
+const getUser = (req, res) => {
+  res
+    .status(500)
+    .json({ status: "error", message: "this route is not defined" });
+};
+const updateUser = (req, res) => {
+  res
+    .status(500)
+    .json({ status: "error", message: "this route is not defined" });
+};
+const deleteUser = (req, res) => {
+  res
+    .status(500)
+    .json({ status: "error", message: "this route is not defined" });
+};
+
 // Routes
 // app.get("/api/v1/tours", getAllTours);
 // app.post("/api/v1/tours", createTour);
@@ -126,12 +172,28 @@ const deleteTour = (req, res) => {
 // app.delete("/api/v1/tours/:id", deleteTour);
 
 //shorter syntax for routes
-app
-  .route("/api/v1/tours")
+const tourRouter = express.Router();
+app.use("/api/v1/tours", tourRouter);
+
+tourRouter
+  .route("/")
   .get(getAllTours)
   .post(createTour);
-app
-  .route("/api/v1/tours/:id")
+tourRouter
+  .route("/:id")
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
+
+const userRouter = express.Router();
+app.use("/api/v1/users", userRouter);
+userRouter
+  .route("/")
+  .get(getAllUsers)
+  .post(createUser);
+
+userRouter
+  .route("/:id")
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
