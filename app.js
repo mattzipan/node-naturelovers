@@ -9,7 +9,13 @@ const app = express();
 
 // MIDDLEWARES
 //morgan logging middleware
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+  console.log("logging activated..");
+}
+
+//middleware to serve static files
+app.use(express.static(`${__dirname}/public`));
 
 //middleware to add the req body to the POST
 app.use(express.json());
