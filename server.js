@@ -10,6 +10,9 @@ dotenv.config({ path: "./config.env" });
 //   process.env.DATABASE_PASSWORD
 // );
 
+//this should run after the environment setting from above
+const app = require("./app");
+
 mongoose
   .connect(process.env.DATABASE_LOCAL, {
     useNewUrlParser: true,
@@ -20,9 +23,6 @@ mongoose
   .then(() => {
     console.log("DB connection successful!");
   });
-
-//this should run after the environment setting from above
-const app = require("./app");
 
 //start the server
 const port = process.env.PORT || 3000;
