@@ -69,6 +69,7 @@ exports.getAllTours = async (req, res) => {
     res.status(200).json({
       //following JSend formating standard
       status: "success",
+      results: tours.length,
       data: {
         tours
       }
