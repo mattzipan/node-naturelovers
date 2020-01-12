@@ -1,4 +1,5 @@
 const Tour = require("../models/tourModel");
+const APIfeatures = require("../utils/apiFeatures");
 
 //reading the file SYNCHRONOUSLY at top level to not block event loop
 // const tours = JSON.parse(
@@ -18,53 +19,30 @@ const Tour = require("../models/tourModel");
 //   next();
 // };
 
+// middleware for top 5 tours
+exports.top5Tours = (req, res, next) => {
+  req.query.limit = "5";
+  req.query.sort = "-ratingsAverage,price";
+  next();
+};
+
 // API GET all tours
 exports.getAllTours = async (req, res) => {
   try {
-    //Filtering
-
-    //shallow copy of query to exclude some fields from queries
-    const queryObj = { ...req.query };
-    const excludedFields = ["page", "sort", "limit", "fields"];
-    //now delete the fields from the original query
-    excludedFields.forEach(item => delete queryObj[item]);
-
-    //replace advanced fields with MongoDB operators
-    let queryString = JSON.stringify(queryObj);
-    queryString = queryString.replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      match => `$${match}`
-    );
-    //gets data from the query string
-    // console.log(req.query);
-    // the model with .find() returns the same as the collection with the .find() in the terminal
-    // use filter directly with MongoDB
-    let query = Tour.find(JSON.parse(queryString));
-
     //same filter with Mongoose methods
     // const tours = await Tour.find()
     //   .where("duration")
     //   .equals(5)
-    //   .where("diffculty")
+    //   .where("difficulty")
     //   .equals("easy");
 
-    //Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(",").join(" ");
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort("-price");
-    }
+    const features = new APIfeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limit()
+      .paginate();
 
-    // Field limiting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(",").join(" ");
-      query = query.select(fields);
-    } else {
-      query = query.select("-__v");
-    }
-
-    const tours = await query;
+    const tours = await features.query;
 
     res.status(200).json({
       //following JSend formating standard
