@@ -6,6 +6,11 @@ const router = express.Router();
 //middleware for tour routes to get the :id value
 // router.param("id", tourController.checkId);
 
+// alias route for top5 tours
+router
+  .route("/top5-tours")
+  .get(tourController.top5Tours, tourController.getAllTours);
+
 router
   .route("/")
   .get(tourController.getAllTours)
