@@ -11,6 +11,9 @@ router
   .route("/top5-tours")
   .get(tourController.top5Tours, tourController.getAllTours);
 
+//aggregated tour stats
+router.route("/tour-stats").get(tourController.getTourStats);
+
 router
   .route("/")
   .get(tourController.getAllTours)
