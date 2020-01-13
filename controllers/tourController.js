@@ -186,7 +186,7 @@ exports.getTourStats = async (req, res) => {
         }
       },
       {
-        // sort by avgPrice, ascending (1) / descending (0)
+        // sort by avgPrice, ascending (1) / descending (-1)
         $sort: { avgPrice: 1 }
       },
       // exclude subgroup easy
@@ -200,10 +200,67 @@ exports.getTourStats = async (req, res) => {
         stats
       }
     });
-  } catch (error) {
+  } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: error
+      message: err
+    });
+  }
+};
+
+exports.getMonthlyPlan = async (req, res) => {
+  try {
+    const year = req.params.year * 1;
+    const plan = await Tour.aggregate([
+      { $unwind: "$startDates" },
+      {
+        $match: {
+          // only select tours during the given year
+          startDates: {
+            $gte: new Date(`${year}-01-01`),
+            $lte: new Date(`${year}-12-31`)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { $month: "$startDates" },
+
+          numTourStarts: { $sum: 1 },
+          // create an array of the tour names
+          tours: { $push: "$name" }
+        }
+      },
+      {
+        $addFields: { month: "$_id" }
+      },
+      {
+        // exclude the id field from the response
+        $project: {
+          _id: 0
+        }
+      },
+      {
+        // sort by number of tour starts
+        $sort: { numTourStarts: -1 }
+      },
+      {
+        // limit the response to 6 results
+        $limit: 6
+      }
+    ]);
+
+    //give the API response
+    res.status(200).json({
+      status: "success",
+      data: {
+        plan
+      }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err
     });
   }
 };
