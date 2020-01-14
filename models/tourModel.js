@@ -63,6 +63,10 @@ const tourSchema = new mongoose.Schema(
       type: Date,
       default: Date.now()
     },
+    secretTour: {
+      type: Boolean,
+      default: false
+    },
     startDates: [Date],
     slug: String
   },
@@ -90,6 +94,20 @@ tourSchema.pre("save", function(next) {
 tourSchema.post("save", function(doc, next) {
   console.log("just saved the tour! This is it:..");
   console.log(doc);
+  next();
+});
+
+//middleware to exclude secret tours
+tourSchema.pre(/^find/, function(next) {
+  this.find({ secretTour: { $ne: true } });
+  //start tracking time
+  this.start = Date.now();
+  next();
+});
+
+//middleware to measure how long a query took
+tourSchema.post(/^find/, function(doc, next) {
+  console.log(`The query took ${Date.now() - this.start} milliseconds.`);
   next();
 });
 
