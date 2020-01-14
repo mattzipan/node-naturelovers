@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 // create Schema
 
@@ -14,6 +15,7 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: "A tour must have a duration!"
     },
+
     maxGroupSize: {
       type: Number,
       required: "A tour must have a group size!"
@@ -61,8 +63,10 @@ const tourSchema = new mongoose.Schema(
       type: Date,
       default: Date.now()
     },
-    startDates: [Date]
+    startDates: [Date],
+    slug: String
   },
+
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
@@ -73,6 +77,20 @@ const tourSchema = new mongoose.Schema(
 // virtual properties are not in the api response by default, it has to be specifically defined
 tourSchema.virtual("durationWeeks").get(function() {
   return this.duration / 7;
+});
+
+//mongoose middleware to create slug on each document before "save & "create"
+tourSchema.pre("save", function(next) {
+  //require slugify package
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+//middleware hook to run after saving
+tourSchema.post("save", function(doc, next) {
+  console.log("just saved the tour! This is it:..");
+  console.log(doc);
+  next();
 });
 
 // use Schema to make the Model
