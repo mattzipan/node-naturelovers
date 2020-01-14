@@ -111,6 +111,14 @@ tourSchema.post(/^find/, function(doc, next) {
   next();
 });
 
+//middleware to exclude secretTours from aggregation queries
+tourSchema.pre("aggregate", function(next) {
+  //add another stage to the aggregation before execution
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+
+  next();
+});
+
 // use Schema to make the Model
 const Tour = mongoose.model("Tour", tourSchema);
 
