@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const slugify = require("slugify");
 
 // create Schema
-
 const tourSchema = new mongoose.Schema(
   {
     name: {
@@ -40,13 +39,22 @@ const tourSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
-      default: 4.5
+      default: 4.5,
+      min: [1, "Rating must be above 1.0"],
+      max: [5, "Rating must be up to 5"]
     },
     price: {
       type: Number,
       required: "A tour must have a price!"
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      //validator should return true/false
+      validator: function(val) {
+        return val < this.price;
+      },
+      message: "Discount must be smaller than the price."
+    },
     summary: {
       type: String,
       trim: true,
