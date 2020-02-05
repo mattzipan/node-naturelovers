@@ -1,8 +1,11 @@
 // script to automatically import data into DB
-
+const dotenv = require("dotenv");
 const fs = require("fs");
 const mongoose = require("mongoose");
 const Tour = require("../../models/tourModel");
+
+dotenv.config({ path: `${__dirname}/../../config.env` });
+
 
 mongoose
   .connect(process.env.DATABASE_LOCAL, {
