@@ -1,5 +1,5 @@
 const express = require("express");
-const appError = require("./utils/appError")
+const AppError = require("./utils/appError")
 const globalErrorHandler = require("./controllers/errorController")
 const morgan = require("morgan");
 const tourRouter = require("./routes/tourRoutes");
@@ -49,7 +49,7 @@ app.all("*", (req, res, next) => {
   // err.status = "fail"
 
   // next handles ANY argument as an error and passes it to the global error handler in app.js, jumping over other middlewares
-  next(new appError(`Cant find ${req.originalUrl}`, 404))
+  next(new AppError(`Cant find ${req.originalUrl}`, 404))
 })
 
 // express interprates every middleware with 4 arguments as an error handler
