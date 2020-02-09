@@ -1,6 +1,7 @@
 const Tour = require("../models/tourModel");
 const APIfeatures = require("../utils/apiFeatures");
 const catchAsyncError = require("../utils/catchAsyncError")
+const AppError = require("../utils/appError")
 
 //reading the file SYNCHRONOUSLY at top level to not block event loop
 // const tours = JSON.parse(
@@ -56,6 +57,11 @@ exports.getAllTours = catchAsyncError(async (req, res, next) => {
 exports.getTour = catchAsyncError(async (req, res, next) => {
 
   const tour = await Tour.findById(req.params.id);
+
+  if (!tour) {
+    return next(new AppError("This ID was not found", 404))
+  }
+
   res.status(200).json({
     //following JSend formating standard
     status: "success",
@@ -87,6 +93,12 @@ exports.updateTour = catchAsyncError(async (req, res, next) => {
     new: true,
     runValidators: true
   });
+
+  if (!tour) {
+    return next(new AppError("This ID was not found", 404))
+  }
+
+
   res.status(200).json({
     status: "success",
     data: {
@@ -106,6 +118,12 @@ exports.deleteTour = catchAsyncError(async (req, res, next) => {
 
   const tour = await Tour.findByIdAndDelete(req.params.id);
   //no content response for deleting
+
+  if (!tour) {
+    return next(new AppError("This ID was not found", 404))
+  }
+
+
   res.status(204).json({
     status: "success",
     data: null
