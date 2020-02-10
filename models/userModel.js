@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
     },
     photo: {
         type: String,
-        required: "A user must have a photo",
         trim: true
     },
     password: {
