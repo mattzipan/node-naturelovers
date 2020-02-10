@@ -5,17 +5,17 @@ Demo app to study node.js with Martin Schmedtmanns Node.js Bootcamp.
 ## Features
 
 - MVC pattern
-- Static html & PUG files as template engine
+- Template engine with PUG files
 - Express 4 server & MongoDB
 - Middlewares
 - APIs for users and tours with all CRUD operations
-- User Authentication
+- User Authentication with JWT
 - Serverside rendered (SSR)
 
 ## To get this running locally ..
 1. clone git repo
 2. run npm install
-3. set up mondoDB locally or in the cloud. After the setup you will receive a connection string that looks like this:
+3. set up mongoDB locally or in the cloud. After the setup you will receive a connection string that looks like this:
 
 ```
 mongodb+srv://username:<password>@cluster9-jfgh5k.mongodb.net/test?retryWrites=true&w=majority
