@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const validator = require("validator")
 
 // create Schema
 
@@ -13,19 +14,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: "A user must have an email",
         unique: true,
-        trim: true
+        trim: true,
+        lowercase: true,
+        validate: [validator.isEmail, "Please provide a valid email."]
     },
     photo: {
         type: String,
         required: "A user must have a photo",
-        unique: true,
         trim: true
     },
     password: {
         type: String,
         required: "A user must have a password",
         unique: true,
-        trim: true
+        trim: true,
+        minlength: 8
     },
     passwordConfirm: {
         type: String,
