@@ -10,6 +10,13 @@ dotenv.config({ path: `${__dirname}/config.env` });
 //   process.env.DATABASE_PASSWORD
 // );
 
+// handling uncaught exception errors
+process.on("uncaughtException", err => {
+  console.log("Uncaught Exception")
+  console.log(err.name, err.message)
+  process.exit(1)
+})
+
 //this should run after the environment setting from above
 const app = require("./app");
 
@@ -32,9 +39,10 @@ const server = app.listen(port, () => {
 });
 
 process.on("unhandledRejection", err => {
-  console.log(err.name, err.message)
   console.log("Unhandled Rejection!")
+  console.log(err.name, err.message)
   server.close(() => {
     process.exit(1)
   })
 })
+
