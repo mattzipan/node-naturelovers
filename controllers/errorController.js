@@ -12,6 +12,13 @@ const handleDuplicateFieldsDB = (err) => {
     return new AppError(message, 400)
 }
 
+const handleValidationErrorDB = (err) => {
+    const value = Object.values(err.errors).map(item => item.message).join(". ")
+    const message = `Invalid input. ${value}`
+
+    return new AppError(message, 400)
+}
+
 const sendErrorProd = (err, res) => {
     // Operational trusted error: send msg to client
     if (err.isOperational) {
@@ -53,6 +60,7 @@ module.exports = (err, req, res, next) => {
         let error = err
         if (error.name === "CastError") error = handleCastErrorDB(error)
         if (error.code === 11000) error = handleDuplicateFieldsDB(error)
+        if (error.name === "ValidationError") error = handleValidationErrorDB(error)
 
         sendErrorProd(error, res)
     }
