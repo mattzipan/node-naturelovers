@@ -25,15 +25,20 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: "A user must have a password",
-        unique: true,
         trim: true,
         minlength: 8
     },
     passwordConfirm: {
         type: String,
         required: "user must have confirm password",
-        unique: true,
-        trim: true
+        trim: true,
+        // this only works on User.save and User.create
+        validate: {
+            validator: function (item) {
+                return item === this.password
+            },
+            message: "Passwords have to match!"
+        }
     }
 })
 
