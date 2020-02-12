@@ -1,4 +1,5 @@
 const User = require("../models/userModel")
+const jwt = require("jsonwebtoken")
 const catchAsyncError = require("../utils/catchAsyncError")
 
 exports.signup = catchAsyncError(async (req, res) => {
@@ -8,6 +9,8 @@ exports.signup = catchAsyncError(async (req, res) => {
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm
     })
+
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
 
     res.status(201).json({
         status: "success",
