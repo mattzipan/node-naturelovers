@@ -27,7 +27,7 @@ mongodb+srv://username:<password>@cluster9-jfgh5k.mongodb.net/test?retryWrites=t
 DATABASE_LOCAL=mongodb+srv://username:<password>@cluster9-jfgh5k.mongodb.net/test?retryWrites=true&w=majority
 PORT=3000
 NODE_ENV=development
-JWT_SECRET=random
+JWT_SECRET=random-and-long-secret-92363546
 ```
 
 5. run npm start
