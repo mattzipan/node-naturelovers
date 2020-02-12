@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const validator = require("validator")
+const bcrypt = require("bcryptjs")
 
 // create Schema
 
@@ -7,7 +8,6 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: "A user must have a name",
-        unique: true,
         trim: true
     },
     email: {
@@ -40,6 +40,21 @@ const userSchema = new mongoose.Schema({
             message: "Passwords have to match!"
         }
     }
+})
+
+// middleware to ecrypt password
+userSchema.pre("save", async function (next) {
+
+    // // if password hasnt changed, dont encrypt it again
+    if (!this.isModified("password")) return next();
+
+    // encrypt
+    this.password = await bcrypt.hash(this.password, 12)
+
+    // prevent the unencrypted confirm password from being stored
+    this.passwordConfirm = undefined
+
+    next();
 })
 
 // use Schema to make the Model
