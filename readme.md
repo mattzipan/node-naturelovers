@@ -21,12 +21,13 @@ Demo app to study node.js with Martin Schmedtmanns Node.js Bootcamp.
 mongodb+srv://username:<password>@cluster9-jfgh5k.mongodb.net/test?retryWrites=true&w=majority
 ```
 
-4. create a config.env in the root folder that holds below key value pairs (replace connection string with the one you received from mongoDB):
+4. create a config.env in the root folder that holds below key value pairs (replace connection string with the one you received from mongoDB and add a string of your choice as JWT_SECRET.):
 
 ```
 DATABASE_LOCAL=mongodb+srv://username:<password>@cluster9-jfgh5k.mongodb.net/test?retryWrites=true&w=majority
 PORT=3000
 NODE_ENV=development
+JWT_SECRET=random
 ```
 
 5. run npm start
