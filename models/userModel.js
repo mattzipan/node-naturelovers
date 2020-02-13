@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: "A user must have a password",
         trim: true,
-        minlength: 8
+        minlength: 8,
+        // dont show passwords in API responses
+        select: false
     },
     passwordConfirm: {
         type: String,
@@ -56,6 +58,11 @@ userSchema.pre("save", async function (next) {
 
     next();
 })
+
+// create instance method to check passwords at login
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword)
+}
 
 // use Schema to make the Model
 const User = mongoose.model("User", userSchema);
